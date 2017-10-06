@@ -163,14 +163,34 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * Return a set containing all the entries as pairs of keys and values.
      * @return  the set view of the map
      */
+    @SuppressWarnings("unchecked")
     public Set <Map.Entry <K, V>> entrySet ()
     {
-        Set <Map.Entry <K, V>> enSet = new HashSet <> ();
-
-        //  T O   B E   I M P L E M E N T E D
-            
-        return enSet;
+        return entrySetRecursive(root);
     } // entrySet
+
+    /****************************************************************************************
+     *Return a set containing all the entries as pairs of keys and values. Helper to entrySet
+     * @param node  the node to start at
+     * @return  the set view of the map
+     */
+    @SuppressWarnings("unchecked")
+    public Set <Map.Entry <K, V>> entrySetRecursive (Node node) {
+        if(node.isLeaf) {
+            Set <Map.Entry <K, V>> subSet = new HashSet <> ();
+            for(int i = 0; i < node.nKeys; i++) {
+                subSet.add(new AbstractMap.SimpleEntry<K,V>(node.key[i], (V) node.ref[i]));
+            }
+            return subSet;
+        }
+        else {
+            Set <Map.Entry <K, V>> enSet = new HashSet <> ();
+            for(int i = 0; i < root.nKeys + 1; i++) {
+                enSet.addAll(entrySetRecursive((Node) node.ref[i]));
+            }
+            return enSet;
+        }
+    } //entrySetRecursive
 
     /********************************************************************************
      * Given the key, look up the value in the B+Tree map.
@@ -208,11 +228,16 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * Return the last (largest) key in the B+Tree map.
      * @return  the last key in the B+Tree map.
      */
+    @SuppressWarnings("unchecked")
     public K lastKey () 
     {
-        //  T O   B E   I M P L E M E N T E D
-
-        return null;
+        Node n = root;
+        K lastKey;
+        while(!n.isLeaf) {
+           n = (Node) n.ref[n.nKeys];
+        }
+        lastKey = n.key[n.nKeys - 1];
+        return lastKey;
     } // lastKey
 
     /********************************************************************************
@@ -221,9 +246,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public SortedMap <K,V> headMap (K toKey)
     {
-        //  T O   B E   I M P L E M E N T E D
-
-        return null;
+        return subMap(firstKey(), toKey);
     } // headMap
 
     /********************************************************************************
@@ -232,9 +255,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public SortedMap <K,V> tailMap (K fromKey)
     {
-        //  T O   B E   I M P L E M E N T E D
-
-        return null;
+        return subMap(fromKey, lastKey());
     } // tailMap
 
     /********************************************************************************
@@ -244,9 +265,14 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public SortedMap <K,V> subMap (K fromKey, K toKey)
     {
-        //  T O   B E   I M P L E M E N T E D
+        SortedMap <K,V> tree = new TreeMap<K,V>();
+        Set <Map.Entry <K, V>> treeSet = entrySet();
 
-        return null;
+        for(Entry<K,V> e : treeSet) {
+            tree.put(e.getKey(),e.getValue());
+        }
+
+        return tree.subMap(fromKey, toKey);
     } // subMap
 
     /********************************************************************************
@@ -434,3 +460,4 @@ public class BpTreeMap <K extends Comparable <K>, V>
     } // main
 
 } // BpTreeMap class
+

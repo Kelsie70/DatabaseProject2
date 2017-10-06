@@ -67,7 +67,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.TREE_MAP;
+    private static final MapType mType = MapType.LINHASH_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -76,8 +76,8 @@ public class Table
     {
         switch (mType) {
         case TREE_MAP:    return new TreeMap <> ();
-        //case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
-        //case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
+        case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
+//        case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
         default:          return null;
         } // switch
     } // makeMap
@@ -161,7 +161,7 @@ public class Table
         String [] newKey    = (Arrays.asList (attrs).containsAll (Arrays.asList (key))) ? key : attrs;
 
         List <Comparable []> rows = new ArrayList <> ();
-                
+        
         for(int i=0;i<attrs.length;i++){
         	boolean attributeExists=false;
         	for(int k=0;k<attribute.length;k++){
@@ -217,8 +217,7 @@ public class Table
         out.println ("RA> " + name + ".select (" + keyVal + ")");
 
         List <Comparable []> rows = new ArrayList <> ();
-        out.println(keyVal);
-        //  T O   B E   I M P L E M E N T E D 
+
         for(int k=0;k<this.tuples.size();k++){
     		for(int j=0;j<this.tuples.get(k).length;j++){
     			KeyType newKey = new KeyType (tuples.get(k)[j]);
@@ -227,9 +226,28 @@ public class Table
     			}
     		}
     	}
-        
+
         return new Table (name + count++, attribute, domain, key, rows);
     } // select
+
+    /************************************************************************************
+     * Select the tuples satisfying the given key predicate (keyval1 <= value < keyval2).
+     * Use an B+ Tree index (SortedMap) to retrieve the tuples with keys in the given range.
+     *
+     * @param keyVal1  the given lower bound for the range (inclusive)
+     * @param keyVal2  the given upper bound for the range (exclusive)
+     * @return  a table with the tuples satisfying the key predicate
+     */
+    public Table select (KeyType keyVal1, KeyType keyVal2)
+    {
+        out.println ("RA> " + name + ".select between (" + keyVal1 + ") and " + keyVal2);
+
+        List <Comparable []> rows = new ArrayList <> ();
+
+        //  T O   B E   I M P L E M E N T E D 
+
+        return new Table (name + count++, attribute, domain, key, rows);
+    } // range_select
 
     /************************************************************************************
      * Union this table and table2.  Check that the two tables are compatible.
@@ -246,7 +264,6 @@ public class Table
 
         List <Comparable []> rows = new ArrayList <> ();
 
-        //  T O   B E   I M P L E M E N T E D 
         for(int i=0;i<tuples.size();i++){
         	rows.add(tuples.get(i));
         }
@@ -269,6 +286,7 @@ public class Table
         		rows.add(table2.tuples.get(i));
         	}
         }
+
         return new Table (name + count++, attribute, domain, key, rows);
     } // union
 
@@ -333,6 +351,7 @@ public class Table
         String [] u_attrs = attributes2.split (" ");
 
         List <Comparable []> rows = new ArrayList <> ();
+
         boolean attributeOneExists=false;
         boolean attributeTwoExists=false;
         for(int i=0;i<attribute.length;i++){
@@ -415,7 +434,7 @@ public class Table
 
         List <Comparable []> rows = new ArrayList <> ();
 
-        //  T O   B E   I M P L E M E N T E D 
+
         ArrayList<Integer> equalPos = new ArrayList<Integer>();
         ArrayList<Integer> equalPos2 = new ArrayList<Integer>();
 
@@ -472,7 +491,7 @@ public class Table
             return new Table (name + count++, ArrayUtil.concat (attribute, table2.attribute),
                                               ArrayUtil.concat (domain, table2.domain), key, rows);
         }
-} // join
+    } // join
 
     /************************************************************************************
      * Return the column position for the given attribute name.
@@ -720,25 +739,6 @@ public class Table
 
         return obj;
     } // extractDom
-    
-    /************************************************************************************
-     * Returns the length of the table.
-     *
-     * @return  the tuple length of the table
-     */
-    
-    public int tuplesLength() {
-    	return tuples.size();
-    }
-    
-    /************************************************************************************
-     * Returns the tuple at the index.
-     *
-     * @param i the index of the tuple
-     * @return  the tuple at the index
-     */
-    
-    public Comparable[] getTuple(int i) {
-    	return tuples.get(i);
-    }
+
 } // Table class
+

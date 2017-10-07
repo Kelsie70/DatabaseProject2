@@ -245,6 +245,15 @@ public class Table
         List <Comparable []> rows = new ArrayList <> ();
 
         //  T O   B E   I M P L E M E N T E D 
+        
+       for(int k=0;k<this.tuples.size();k++){
+            for(int j=0;j<this.tuples.get(k).length;j++){
+                KeyType newKey = new KeyType (tuples.get(k)[j]); 
+                if(newKey.compareTo(keyVal1) == 1 && newKey.compareTo(keyVal2) == -1){ 
+                    rows.add(tuples.get(k));
+                }
+            }
+        }
 
         return new Table (name + count++, attribute, domain, key, rows);
     } // range_select

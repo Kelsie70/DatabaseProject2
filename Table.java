@@ -79,7 +79,7 @@ public class Table
         switch (mType) {
         case TREE_MAP:    return new TreeMap <> ();
         case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
- //       case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
+        case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
         default:          return null;
         } // switch
     } // makeMap
@@ -221,12 +221,12 @@ public class Table
         List <Comparable []> rows = new ArrayList <> ();
 
         for(int k=0;k<this.tuples.size();k++){
-    		for(int j=0;j<this.tuples.get(k).length;j++){
-    			KeyType newKey = new KeyType (tuples.get(k)[j]);
-    			if(newKey.toString().equals(keyVal.toString())){ 
-    				rows.add(tuples.get(k));
-    			}
-    		}
+	    for(int j=0;j<this.tuples.get(k).length;j++){
+		KeyType newKey = new KeyType (tuples.get(k)[j]);
+		if(newKey.toString().equals(keyVal.toString())){ 
+		    rows.add(tuples.get(k));
+		}
+	    }
     	}
 
         return new Table (name + count++, attribute, domain, key, rows);

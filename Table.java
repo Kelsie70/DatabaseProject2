@@ -226,12 +226,13 @@ public class Table
         		rows.add(new Comparable[attribute.length]);
         	}
         }
-        else{
+	else if(mType==MapType.TREE_MAP){
+        	
 	        for(int k=0;k<this.tuples.size();k++){
 			    for(int j=0;j<this.tuples.get(k).length;j++){
 					KeyType newKey = new KeyType (tuples.get(k)[j]);
 					if(newKey.toString().equals(keyVal.toString())){ 
-					    rows.add(tuples.get(k));
+					    rows.add(index.get(keyVal));
 					}
 			    }
 	    	}

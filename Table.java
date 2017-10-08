@@ -219,15 +219,23 @@ public class Table
         out.println ("RA> " + name + ".select (" + keyVal + ")");
 
         List <Comparable []> rows = new ArrayList <> ();
-
-        for(int k=0;k<this.tuples.size();k++){
-	    for(int j=0;j<this.tuples.get(k).length;j++){
-		KeyType newKey = new KeyType (tuples.get(k)[j]);
-		if(newKey.toString().equals(keyVal.toString())){ 
-		    rows.add(tuples.get(k));
-		}
-	    }
-    	}
+        if(mType==MapType.LINHASH_MAP){
+        	rows.add(index.get(keyVal));
+        	if(rows.get(0)==null){
+        		rows.remove(0);
+        		rows.add(new Comparable[attribute.length]);
+        	}
+        }
+        else{
+	        for(int k=0;k<this.tuples.size();k++){
+			    for(int j=0;j<this.tuples.get(k).length;j++){
+					KeyType newKey = new KeyType (tuples.get(k)[j]);
+					if(newKey.toString().equals(keyVal.toString())){ 
+					    rows.add(tuples.get(k));
+					}
+			    }
+	    	}
+        }
 
         return new Table (name + count++, attribute, domain, key, rows);
     } // select
@@ -609,8 +617,8 @@ public class Table
             tuples.add (tup);
             Comparable [] keyVal = new Comparable [key.length];
             int []        cols   = match (key);
-            for (int j = 0; j < keyVal.length; j++) keyVal [j] = tup [cols [j]];
-            if (mType != MapType.NO_MAP) index.put (new KeyType (keyVal), tup);
+            for (int j = 0; j < keyVal.length; j++) keyVal [j] = tup [cols [j]];            
+        	if (mType != MapType.NO_MAP) index.put (new KeyType (keyVal), tup);           
             return true;
         } else {
             return false;

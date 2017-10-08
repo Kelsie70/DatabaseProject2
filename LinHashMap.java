@@ -162,12 +162,24 @@ public class LinHashMap <K, V>
      */
     public V getFromBucket(Bucket currentBucket, Object key){
     	V ret;
-    	for(int j=0;j<currentBucket.nKeys;j++){
-        	if(currentBucket.key[j]==key){
-        		ret=currentBucket.value[j];
-        		return ret;
-        	}
-        }
+    	if(key instanceof KeyType){
+    		for(int j=0;j<currentBucket.nKeys;j++){
+    			KeyType k=(KeyType) key;
+    			KeyType stored=(KeyType) currentBucket.key[j];
+            	if(k.compareTo(stored)==0){
+            		ret=currentBucket.value[j];
+            		return ret;
+            	}
+            }
+    	}
+    	else{
+	    	for(int j=0;j<currentBucket.nKeys;j++){
+	        	if(currentBucket.key[j]==key){
+	        		ret=currentBucket.value[j];
+	        		return ret;
+	        	}
+	        }
+    	}
         if(currentBucket.next!=null){
         	ret=getFromBucket(currentBucket.next,key);
         }

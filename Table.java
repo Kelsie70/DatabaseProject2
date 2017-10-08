@@ -6,12 +6,14 @@
  */
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
 import static java.lang.Boolean.*;
 import static java.lang.System.out;
+import java.util.HashMap;
 
 /****************************************************************************************
  * This class implements relational database tables (including attribute names, domains
@@ -77,7 +79,7 @@ public class Table
         switch (mType) {
         case TREE_MAP:    return new TreeMap <> ();
         case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
-//        case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
+        case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
         default:          return null;
         } // switch
     } // makeMap
@@ -219,12 +221,12 @@ public class Table
         List <Comparable []> rows = new ArrayList <> ();
 
         for(int k=0;k<this.tuples.size();k++){
-    		for(int j=0;j<this.tuples.get(k).length;j++){
-    			KeyType newKey = new KeyType (tuples.get(k)[j]);
-    			if(newKey.toString().equals(keyVal.toString())){ 
-    				rows.add(tuples.get(k));
-    			}
-    		}
+	    for(int j=0;j<this.tuples.get(k).length;j++){
+		KeyType newKey = new KeyType (tuples.get(k)[j]);
+		if(newKey.toString().equals(keyVal.toString())){ 
+		    rows.add(tuples.get(k));
+		}
+	    }
     	}
 
         return new Table (name + count++, attribute, domain, key, rows);
@@ -246,11 +248,11 @@ public class Table
 
         //  T O   B E   I M P L E M E N T E D 
         
-       for(int k=0;k<this.tuples.size();k++){
-            for(int j=0;j<this.tuples.get(k).length;j++){
-                KeyType newKey = new KeyType (tuples.get(k)[j]); 
+        for(int k=0;k<this.tuples.size();k++){
+        	for(int j=0;j<this.tuples.get(k).length;j++){
+        		KeyType newKey = new KeyType (tuples.get(k)[j]); 
                 if(newKey.compareTo(keyVal1) == 1 && newKey.compareTo(keyVal2) == -1){ 
-                    rows.add(tuples.get(k));
+                	rows.add(tuples.get(k));
                 }
             }
         }
@@ -424,7 +426,73 @@ public class Table
      */
     public Table h_join (String attributes1, String attributes2, Table table2)
     {
-        return null;
+    	HashMap<KeyType,List<Comparable[]>> build= new HashMap<KeyType,List <Comparable[]>>();  
+    	String[] keyArrayT1=attributes1.split(" ");
+    	String[] keyArrayT2=attributes2.split(" ");
+    	for(Comparable[] b : table2.tuples){
+    		ArrayList<Comparable> valuesB=new ArrayList<Comparable>(); 
+    		ArrayList<Integer> indexB=new ArrayList<Integer>();
+    		for(String s:keyArrayT2){
+    			int index=Arrays.asList(table2.attribute).indexOf(s);
+    			valuesB.add(b[index]);
+    			indexB.add(index);
+    		}
+    		Collections.sort(indexB,Collections.reverseOrder());
+    		List<Comparable> copiedAttributes=new LinkedList<Comparable>(Arrays.asList(b));
+    		for(Integer i: indexB){
+    			int index=i;
+    			copiedAttributes.remove(index);
+    			int length=b.length-keyArrayT2.length;
+    			b=copiedAttributes.toArray(new Comparable[length]);
+    		}
+    		Comparable[] valuesArrayB=valuesB.toArray(new Comparable[keyArrayT1.length]);
+        	KeyType keyB=new KeyType(valuesArrayB);
+        	if(build.get(keyB)==null){
+        		List<Comparable[]> value=new ArrayList<Comparable[]>();
+        		value.add(b);
+        		build.put(keyB, value);
+        	}
+        	else{
+        		List<Comparable[]> duplicateKey=build.get(keyB);
+        		duplicateKey.add(b);
+        		build.put(keyB,duplicateKey);
+        	}
+    		
+    	}
+    	List <Comparable[]> rows = new ArrayList <> ();
+    	for(Comparable[]a:this.tuples){
+    		ArrayList<Comparable> valuesA=new ArrayList<Comparable>();    		
+    		for(String s:keyArrayT1){
+    			int index=Arrays.asList(this.attribute).indexOf(s);
+    			valuesA.add(a[index]);
+    		}
+    		Comparable[] valuesArrayA=valuesA.toArray(new Comparable[keyArrayT1.length]);
+        	KeyType keyA=new KeyType(valuesArrayA);
+        	Comparable[] b=build.get(keyA).get(0);
+        	if(build.get(keyA).size()>1){
+        		List<Comparable[]> removeDuplicateKeys=build.get(keyA);
+        		removeDuplicateKeys.remove(0);
+        		build.put(keyA,removeDuplicateKeys);
+        	}
+    		ArrayList<Comparable> joinedRow=new ArrayList<Comparable>();
+    		Comparable[] fullRow=ArrayUtil.concat(a, b);
+    		for(Comparable c:fullRow){
+    			joinedRow.add(c);
+    		}
+    		int length=attribute.length+table2.attribute.length-1;
+    		Comparable[] completedRow=joinedRow.toArray(new Comparable[length]);
+    		rows.add(completedRow);
+    	}
+    	
+    	List<String> updatedAttributes=new LinkedList<String>(Arrays.asList(table2.attribute));
+    	for(String s: keyArrayT2){
+    		int index=Arrays.asList(table2.attribute).indexOf(s);
+    		updatedAttributes.remove(index);    		
+		}
+    	String[] updatedAttributesArray=updatedAttributes.toArray(new String[table2.attribute.length-keyArrayT2.length]);
+    	
+        return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
+                ArrayUtil.concat (domain, table2.domain), key, rows);
     } // h_join
 
     /************************************************************************************

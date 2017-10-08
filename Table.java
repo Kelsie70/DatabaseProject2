@@ -434,6 +434,9 @@ public class Table
     		ArrayList<Integer> indexB=new ArrayList<Integer>();
     		for(String s:keyArrayT2){
     			int index=Arrays.asList(table2.attribute).indexOf(s);
+    			if(index==-1){
+    				return null;
+    			}
     			valuesB.add(b[index]);
     			indexB.add(index);
     		}
@@ -464,6 +467,9 @@ public class Table
     		ArrayList<Comparable> valuesA=new ArrayList<Comparable>();    		
     		for(String s:keyArrayT1){
     			int index=Arrays.asList(this.attribute).indexOf(s);
+    			if(index==-1){
+    				return null;
+    			}
     			valuesA.add(a[index]);
     		}
     		Comparable[] valuesArrayA=valuesA.toArray(new Comparable[keyArrayT1.length]);
@@ -490,7 +496,9 @@ public class Table
     		updatedAttributes.remove(index);    		
 		}
     	String[] updatedAttributesArray=updatedAttributes.toArray(new String[table2.attribute.length-keyArrayT2.length]);
-    	
+    	if(rows.size()==0){
+    		return null;
+    	}
         return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
                 ArrayUtil.concat (domain, table2.domain), key, rows);
     } // h_join

@@ -22,13 +22,18 @@ public class BpTreeMapTest {
 	
 	BpTreeMap <Integer, Integer> bpt = new BpTreeMap <> (Integer.class, Integer.class);
         
-	int keys = 20;
+	int keys = 10;
         
-        //add key/value pair to tree        
-        for (int i = 1; i <= keys; i ++)
-	    {
-		bpt.put (i, i * 2);
-	    }
+	lhm.put(8,  10);
+	lhm.put(19,  4);
+        lhm.put(12,  2);
+        lhm.put(5,  17);
+	lhm.put(6,  11);
+        lhm.put(11,  14);
+        lhm.put(7, 22);
+	lhm.put(1,  6);
+        lhm.put(21, 16);
+	lhm.put(25,  3);
 
         return bpt;
     }
@@ -45,7 +50,7 @@ public class BpTreeMapTest {
 	
 	BpTreeMap <Integer, Integer> bpt = createTree();
 	
-	assertEquals(1, (int)bpt.firstKey() );
+	assertEquals(1, (int)bpt.firstKey());
     }
 
     /**
@@ -60,7 +65,7 @@ public class BpTreeMapTest {
 	
 	BpTreeMap <Integer, Integer> bpt = createTree();
 	
-	assertEquals(20, (int)bpt.lastKey());
+	assertEquals(25, (int)bpt.lastKey());
     }
     
 
@@ -77,28 +82,9 @@ public class BpTreeMapTest {
 	BpTreeMap <Integer, Integer> bpt = createTree();
 	Set<Map.Entry<Integer, Integer>> set = bpt.entrySet();
 	
-	assertEquals(20, set.size());
+	assertEquals(10, set.size());
     }
-    
-    /**
-     *
-     * Tests the subMap method which is used in the head and tail map methods
-     * as well
-     *
-     */
-
-    @Test
-
-    public void testSubMap() {
-
-	BpTreeMap <Integer, Integer> bpt = createTree();
-	BpTreeMap <Integer, Integer> subbpt = (BpTreeMap) bpt.subMap(3, 7);
-	
-	assertEquals(null, subbpt.get(2));
-	assertEquals(9, (int) subbpt.get(3));
-	assertEquals(null, subbpt.get(8));
-    }
-    
+        
     /**
      *
      * Tests the size method

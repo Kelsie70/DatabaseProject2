@@ -817,5 +817,26 @@ public class Table
         return obj;
     } // extractDom
 
+    /************************************************************************************
+     * Returns the length of the table.
+     *
+     * @return  the tuple length of the table
+     */
+    
+    public int tuplesLength() {
+	return tuples.size();
+    }
+    
+    /************************************************************************************
+     * Returns the tuple at the index.
+     *
+     * @param i the index of the tuple
+     * @return  the tuple at the index
+     */
+    
+    public Comparable[] getTuple(int i) {
+	return tuples.get(i);
+    }
+
 } // Table class
 

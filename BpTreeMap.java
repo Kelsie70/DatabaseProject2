@@ -130,6 +130,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     private boolean hasSplit = false;
 
+    private boolean nonLeaf = false;
+
     /** The counter for the number nodes accessed (for performance testing)
      */
     private int count = 0;
@@ -368,22 +370,26 @@ public class BpTreeMap <K extends Comparable <K>, V>
             if(hasSplit == true) {
                 if (n.nKeys < ORDER - 1) {
                     wedge(temp.key[temp.nKeys-1], rt, n, n.find(temp.key[temp.nKeys-1]), false);
+                    if(nonLeaf) {
+                        temp.key[temp.nKeys-1] = null;
+                        temp.ref[temp.nKeys] = null;
+                        temp.nKeys-=1;
+                        nonLeaf = false;
+                    }
                     hasSplit = false;
                 }
                 else {
-                    rp = split(temp.key[temp.nKeys-1],rt,n,false);
+                    rt = split(temp.key[temp.nKeys-1],rt,n,false);
                     if(n==root) {
-                        root = makeRoot (n,n.key[n.nKeys-1],rp);
-                    }
-                    /*else {
+                        root = makeRoot (n,n.key[n.nKeys-1],rt);
                         n.key[n.nKeys-1] = null;
-                        //rp.ref[0] = n.ref[n.nKeys];
                         n.ref[n.nKeys] = null;
-                    }*/
-                    n.key[n.nKeys-1] = null;
-                    n.ref[n.nKeys] = null;
-                    n.nKeys-=1;
-                    hasSplit = false;
+                        n.nKeys-=1;
+                        hasSplit = false;
+                    }
+                    else {
+                        nonLeaf = true;
+                    }
                 }
             }
 

@@ -87,7 +87,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
         {
             nKeys = num;
             for (int i = 0; i < num; i++) { key[i] = n.key[from+i]; ref[i] = n.ref[from+i]; }
+            //if(n.isLeaf) {
             ref[num] = n.ref[from+num];
+            //}
         } // copy
 
         /****************************************************************************
@@ -340,6 +342,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
         out.println ("=============================================================");
 
         Node rt = null;                                                      // holder for right sibling
+        Node rp = null;                                                      // holder for right sibling of parent
         
         if (n.isLeaf) {                                                      // handle leaf node level
 
@@ -360,8 +363,29 @@ public class BpTreeMap <K extends Comparable <K>, V>
             int i = n.find (key);                                            // find "<=" position
             rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
             if (DEBUG) out.println ("insert: handle internal node level");
+            Node temp = (Node) n.ref[i];
 
-                //  T O   B E   I M P L E M E N T E D
+            if(hasSplit == true) {
+                if (n.nKeys < ORDER - 1) {
+                    wedge(temp.key[temp.nKeys-1], rt, n, n.find(temp.key[temp.nKeys-1]), false);
+                    hasSplit = false;
+                }
+                else {
+                    rp = split(temp.key[temp.nKeys-1],rt,n,false);
+                    if(n==root) {
+                        root = makeRoot (n,n.key[n.nKeys-1],rp);
+                    }
+                    /*else {
+                        n.key[n.nKeys-1] = null;
+                        //rp.ref[0] = n.ref[n.nKeys];
+                        n.ref[n.nKeys] = null;
+                    }*/
+                    n.key[n.nKeys-1] = null;
+                    n.ref[n.nKeys] = null;
+                    n.nKeys-=1;
+                    hasSplit = false;
+                }
+            }
 
         } // if
 
@@ -420,13 +444,14 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * @param n    the current node
      * @return  the right sibling node, if allocated, else null
      */
+    @SuppressWarnings("unchecked")
     private Node split (K key, Object ref, Node n, boolean left)
     {
         bn.copy (n, 0, ORDER-1);                                          // copy n into big node                           
         if (wedge (key, ref, bn, bn.find (key), left)) {                  // if wedge (key, ref) into big node was successful
             n.copy (bn, 0, MID);                                          // copy back first half to node n
             Node rt = new Node (ORDER, n.isLeaf);                         // make a right sibling node (rt)
-            rt.copy (bn, MID, ORDER-MID);                                 // copy second to node rt    
+            rt.copy (bn, MID, ORDER-MID);                                 // copy second to node rt      
             return rt;                                                    // return right sibling
         } // if     
         return null;                                                      // no new node created as key is duplicate

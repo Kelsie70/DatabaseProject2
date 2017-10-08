@@ -24,16 +24,16 @@ public class BpTreeMapTest {
         
 	int keys = 10;
         
-	lhm.put(8,  10);
-	lhm.put(19,  4);
-        lhm.put(12,  2);
-        lhm.put(5,  17);
-	lhm.put(6,  11);
-        lhm.put(11,  14);
-        lhm.put(7, 22);
-	lhm.put(1,  6);
-        lhm.put(21, 16);
-	lhm.put(25,  3);
+	bpt.put(8,  10);
+	bpt.put(19,  4);
+        bpt.put(12,  2);
+        bpt.put(5,  17);
+	bpt.put(6,  11);
+        bpt.put(11,  14);
+        bpt.put(7, 22);
+	bpt.put(1,  6);
+        bpt.put(21, 16);
+	bpt.put(25,  3);
 
         return bpt;
     }
@@ -97,7 +97,7 @@ public class BpTreeMapTest {
 
 	BpTreeMap <Integer, Integer> bpt = createTree();
 	
-	assertEquals(20, tree.size());
+	assertEquals(20, bpt.size());
     }
 
 }

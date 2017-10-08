@@ -1,9 +1,9 @@
 
-name := " Database Project 1"
+name := " Database Project 2"
      
 version := "1.0-SNAPSHOT"
 
-description := " Project 1 for Databases"
+description := " Project 2 for Databases"
 	    
 autoScalaLibrary := false
 		 

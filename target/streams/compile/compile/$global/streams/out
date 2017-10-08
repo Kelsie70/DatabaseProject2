@@ -1,0 +1,48 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:27:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m	lhm.put(8,  10);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:28:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m	lhm.put(19,  4);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:29:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m        lhm.put(12,  2);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:30:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m        lhm.put(5,  17);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:31:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m	lhm.put(6,  11);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:32:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m        lhm.put(11,  14);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:33:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m        lhm.put(7, 22);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:34:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m	lhm.put(1,  6);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:35:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m        lhm.put(21, 16);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:36:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable lhm[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m	lhm.put(25,  3);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/BpTreeMapTest.java:100:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   variable tree[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class BpTreeMapTest[0m
+[0m[[0m[31merror[0m] [0m[0m	assertEquals(20, tree.size());[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/kelsiebelan/Documents/GitHub/DatabaseProject2/TableTester.java:103:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   method getTuple(int)[0m
+[0m[[0m[31merror[0m] [0m[0m  location: variable movie_select of type Table[0m
+[0m[[0m[31merror[0m] [0m[0m		Comparable[] starWars = movie_select.getTuple(0);[0m

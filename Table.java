@@ -257,10 +257,19 @@ public class Table
 
         List <Comparable []> rows = new ArrayList <> ();
 
-        index.firstKey();
+        Set<Map.Entry<KeyType,Comparable[]>> entries = index.entrySet();
 
-        for(Map.Entry<KeyType,Comparable> entry : index.subMap(keyVal1,keyVal2)) {
-            rows.add(index.get(entry));
+        boolean range = false;
+        for(Map.Entry<KeyType,Comparable[]> e : entries) {
+            if(e.getKey().compareTo(keyVal1) == 0) {
+                range = true;
+            }
+            if(range) {
+                rows.add(index.get(e.getKey()));
+            }
+            if(e.getKey().compareTo(keyVal2) == 0) {
+                range = false;
+            }
         }
 
         return new Table (name + count++, attribute, domain, key, rows);
@@ -554,6 +563,64 @@ public class Table
                 ArrayUtil.concat (domain, table2.domain), key, rows);
 		
 	}
+	else if(mType == MapType.BPTREE_MAP) {
+        BpTreeMap <KeyType, Comparable[]> bp = new BpTreeMap <> (KeyType.class, Comparable [].class);
+            String[] keyArrayT1=attributes1.split(" ");
+            String[] keyArrayT2=attributes2.split(" ");
+            List <Comparable[]> rows = new ArrayList <> ();     
+            for(Comparable[] b : table2.tuples){
+                ArrayList<Comparable> valuesB=new ArrayList<Comparable>(); 
+                ArrayList<Integer> indexB=new ArrayList<Integer>();
+                Comparable [] keyVal=new Comparable[keyArrayT2.length];
+                for(int j=0;j<keyArrayT2.length;j++){
+                    int index=Arrays.asList(table2.attribute).indexOf(keyArrayT2[j]);
+                    if(index==-1){
+                        return null;
+                    }
+                    keyVal[j]=b[index];
+                    indexB.add(index);
+                }
+                Collections.sort(indexB,Collections.reverseOrder());
+                List<Comparable> copiedAttributes=new LinkedList<Comparable>(Arrays.asList(b));
+                for(Integer i: indexB){
+                    int index=i;
+                    copiedAttributes.remove(index);
+                    int length=b.length-keyArrayT2.length;
+                    b=copiedAttributes.toArray(new Comparable[length]);
+                }
+                bp.put(new KeyType(keyVal), b);
+            }
+            for(Comparable[] a : tuples){
+                Comparable [] keyVal=new Comparable[keyArrayT1.length];
+                for(int j=0;j<keyArrayT1.length;j++){
+                    int index=Arrays.asList(attribute).indexOf(keyArrayT1[j]);
+                    if(index==-1){
+                        return null;
+                    }
+                    keyVal[j]=a[index];
+                }
+                Comparable[] b=bp.get(new KeyType(keyVal));
+                ArrayList<Comparable> joinedRow=new ArrayList<Comparable>();
+                Comparable[] fullRow=ArrayUtil.concat(a, b);
+                for(Comparable c:fullRow){
+                    joinedRow.add(c);
+                }
+                int length=attribute.length+table2.attribute.length-1;
+                Comparable[] completedRow=joinedRow.toArray(new Comparable[length]);
+                rows.add(completedRow);
+            }
+            List<String> updatedAttributes=new LinkedList<String>(Arrays.asList(table2.attribute));
+            for(String s: keyArrayT2){
+                int index=Arrays.asList(table2.attribute).indexOf(s);
+                updatedAttributes.remove(index);            
+            }
+            String[] updatedAttributesArray=updatedAttributes.toArray(new String[table2.attribute.length-keyArrayT2.length]);
+            if(rows.size()==0){
+                rows.add(new Comparable[attribute.length]);
+            }
+            return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
+                    ArrayUtil.concat (domain, table2.domain), key, rows);
+    }
     	return null;
     } // i_join
 

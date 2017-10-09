@@ -13,6 +13,26 @@ well as the new classes that we implemented.
 This project has a build.sbt file in order for the project to be 
 compatible for compiling and running with sbt.
 
+
+________________________________________________________
+To Compile
+________________________________________________________
+
+$ javac [.java file name]
+
+________________________________________________________
+To Run Programs
+________________________________________________________
+
+$ java [file name]
+
+________________________________________________________
+To Run JUnit Tests
+________________________________________________________
+
+$ sbt test
+
+
 ________________________________________________________
 Group Member Contributions and Evaluations
 ________________________________________________________

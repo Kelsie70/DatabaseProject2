@@ -226,13 +226,12 @@ public class Table
         		rows.add(new Comparable[attribute.length]);
         	}
         }
-	else if(mType==MapType.TREE_MAP){
-        	
+        else if(mType==MapType.TREE_MAP){
 	        for(int k=0;k<this.tuples.size();k++){
 			    for(int j=0;j<this.tuples.get(k).length;j++){
 					KeyType newKey = new KeyType (tuples.get(k)[j]);
 					if(newKey.toString().equals(keyVal.toString())){ 
-					    rows.add(index.get(keyVal));
+						rows.add(index.get(keyVal));
 					}
 			    }
 	    	}
@@ -420,8 +419,66 @@ public class Table
      * @return  a table with tuples satisfying the equality predicate
      */
     public Table i_join (String attributes1, String attributes2, Table table2)
-    {
-        return null;
+    {   	
+    	if(mType==MapType.LINHASH_MAP){
+	    	LinHashMap <KeyType, Comparable[]> ht = new LinHashMap <> (KeyType.class, Comparable [].class);
+	    	String[] keyArrayT1=attributes1.split(" ");
+	    	String[] keyArrayT2=attributes2.split(" ");
+	    	List <Comparable[]> rows = new ArrayList <> ();    	
+	    	for(Comparable[] b : table2.tuples){
+	    		ArrayList<Comparable> valuesB=new ArrayList<Comparable>(); 
+	    		ArrayList<Integer> indexB=new ArrayList<Integer>();
+	    		Comparable [] keyVal=new Comparable[keyArrayT2.length];
+		    	for(int j=0;j<keyArrayT2.length;j++){
+		    		int index=Arrays.asList(table2.attribute).indexOf(keyArrayT2[j]);
+	    			if(index==-1){
+	    				return null;
+	    			}
+	    			keyVal[j]=b[index];
+	    			indexB.add(index);
+		    	}
+		    	Collections.sort(indexB,Collections.reverseOrder());
+	    		List<Comparable> copiedAttributes=new LinkedList<Comparable>(Arrays.asList(b));
+	    		for(Integer i: indexB){
+	    			int index=i;
+	    			copiedAttributes.remove(index);
+	    			int length=b.length-keyArrayT2.length;
+	    			b=copiedAttributes.toArray(new Comparable[length]);
+	    		}
+		    	ht.put(new KeyType(keyVal), b);
+	    	}
+	    	for(Comparable[] a : tuples){
+	    		Comparable [] keyVal=new Comparable[keyArrayT1.length];
+		    	for(int j=0;j<keyArrayT1.length;j++){
+		    		int index=Arrays.asList(attribute).indexOf(keyArrayT1[j]);
+	    			if(index==-1){
+	    				return null;
+	    			}
+	    			keyVal[j]=a[index];
+		    	}
+		    	Comparable[] b=ht.get(new KeyType(keyVal));
+		    	ArrayList<Comparable> joinedRow=new ArrayList<Comparable>();
+	    		Comparable[] fullRow=ArrayUtil.concat(a, b);
+	    		for(Comparable c:fullRow){
+	    			joinedRow.add(c);
+	    		}
+	    		int length=attribute.length+table2.attribute.length-1;
+	    		Comparable[] completedRow=joinedRow.toArray(new Comparable[length]);
+	    		rows.add(completedRow);
+	    	}
+	    	List<String> updatedAttributes=new LinkedList<String>(Arrays.asList(table2.attribute));
+	    	for(String s: keyArrayT2){
+	    		int index=Arrays.asList(table2.attribute).indexOf(s);
+	    		updatedAttributes.remove(index);    		
+			}
+	    	String[] updatedAttributesArray=updatedAttributes.toArray(new String[table2.attribute.length-keyArrayT2.length]);
+	    	if(rows.size()==0){
+	    		rows.add(new Comparable[attribute.length]);
+	    	}
+	    	return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
+	                ArrayUtil.concat (domain, table2.domain), key, rows);
+    	}   	
+    	return null;
     } // i_join
 
     /************************************************************************************
@@ -506,7 +563,7 @@ public class Table
 		}
     	String[] updatedAttributesArray=updatedAttributes.toArray(new String[table2.attribute.length-keyArrayT2.length]);
     	if(rows.size()==0){
-    		return null;
+    		rows.add(new Comparable[attribute.length]);
     	}
         return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
                 ArrayUtil.concat (domain, table2.domain), key, rows);

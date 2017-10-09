@@ -477,7 +477,85 @@ public class Table
 	    	}
 	    	return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
 	                ArrayUtil.concat (domain, table2.domain), key, rows);
-    	}   	
+    	}
+	else if(mtype == TREE_MAP){
+		TreeMap<KeyType,List<Comparable[]>> treemapJoin= new TreeMap<KeyType,List <Comparable[]>>();  
+    	String[] keyArrayT1=attributes1.split(" ");
+    	String[] keyArrayT2=attributes2.split(" ");
+    	for(Comparable[] b : table2.tuples){
+    		ArrayList<Comparable> valuesB =new ArrayList<Comparable>(); 
+    		ArrayList<Integer> indexB =new ArrayList<Integer>();
+    		for(String s:keyArrayT2){
+    			int index=Arrays.asList(table2.attribute).indexOf(s);
+    			if(index==-1){
+    				return null;
+    			}
+    			valuesB.add(b[index]);
+    			indexB.add(index);
+    		}
+    		Collections.sort(indexB,Collections.reverseOrder());
+    		List<Comparable> copiedAttributes=new LinkedList<Comparable>(Arrays.asList(b));
+    		for(Integer i: indexB){
+    			int index=i;
+    			copiedAttributes.remove(index);
+    			int length=b.length-keyArrayT2.length;
+    			b=copiedAttributes.toArray(new Comparable[length]);
+    		}
+    		Comparable[] valuesArrayB=valuesB.toArray(new Comparable[keyArrayT1.length]);
+        	KeyType keyB=new KeyType(valuesArrayB);
+        	if(treemapJoin.get(keyB)==null){
+        		List<Comparable[]> value=new ArrayList<Comparable[]>();
+        		value.add(b);
+        		treemapJoin.put(keyB, value);
+        	}
+        	else{
+        		List<Comparable[]> duplicateKey=treemapJoin.get(keyB);
+        		duplicateKey.add(b);
+        		treemapJoin.put(keyB,duplicateKey);
+        	}
+    		
+    	}
+    	List <Comparable[]> rows = new ArrayList <> ();
+    	for(Comparable[]a: tuples){
+    		ArrayList<Comparable> valuesA=new ArrayList<Comparable>();    		
+    		for(String s:keyArrayT1){
+    			int index=Arrays.asList(this.attribute).indexOf(s);
+    			if(index==-1){
+    				return null;
+    			}
+    			valuesA.add(a[index]);
+    		}
+    		Comparable[] valuesArrayA=valuesA.toArray(new Comparable[keyArrayT1.length]);
+        	KeyType keyA=new KeyType(valuesArrayA);
+        	Comparable[] b=treemapJoin.get(keyA).get(0);
+        	if(treemapJoin.get(keyA).size()>1){
+        		List<Comparable[]> removeDuplicateKeys=treemapJoin.get(keyA);
+        		removeDuplicateKeys.remove(0);
+        		treemapJoin.put(keyA,removeDuplicateKeys);
+        	}
+    		ArrayList<Comparable> joinedRow=new ArrayList<Comparable>();
+    		Comparable[] fullRow=ArrayUtil.concat(a, b);
+    		for(Comparable c:fullRow){
+    			joinedRow.add(c);
+    		}
+    		int length=attribute.length+table2.attribute.length-1;
+    		Comparable[] completedRow=joinedRow.toArray(new Comparable[length]);
+    		rows.add(completedRow);
+    	}
+    	
+    	List<String> updatedAttributes=new LinkedList<String>(Arrays.asList(table2.attribute));
+    	for(String s: keyArrayT2){
+    		int index=Arrays.asList(table2.attribute).indexOf(s);
+    		updatedAttributes.remove(index);    		
+		}
+    	String[] updatedAttributesArray=updatedAttributes.toArray(new String[table2.attribute.length-keyArrayT2.length]);
+    	if(rows.size()==0){
+    		return null;
+    	}
+        return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
+                ArrayUtil.concat (domain, table2.domain), key, rows);
+		
+	}
     	return null;
     } // i_join
 

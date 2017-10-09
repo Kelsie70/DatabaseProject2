@@ -52,7 +52,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     /********************************************************************************
      * This inner class defines nodes that are stored in the B+tree map.
      */
-    private class Node
+    private class Node implements Serializable
     {
         boolean   isLeaf;                             // whether the node is a leaf 
         int       nKeys;                              // number of active keys

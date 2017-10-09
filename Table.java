@@ -478,7 +478,7 @@ public class Table
 	    	return new Table (name + count++, ArrayUtil.concat (attribute, updatedAttributesArray),
 	                ArrayUtil.concat (domain, table2.domain), key, rows);
     	}
-	else if(mtype == TREE_MAP){
+	else if(mType == MapType.TREE_MAP){
 		TreeMap<KeyType,List<Comparable[]>> treemapJoin= new TreeMap<KeyType,List <Comparable[]>>();  
     	String[] keyArrayT1=attributes1.split(" ");
     	String[] keyArrayT2=attributes2.split(" ");
